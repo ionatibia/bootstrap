@@ -1,8 +1,17 @@
 $(document).ready(function() {
 
-
-
-    $('#calendar').fullCalendar({
+    $.ajax({
+      url: 'http://localhost:3000/eventsList',
+      type: 'GET',
+      dataType: 'json',
+      success: function (data) {
+        var eventos = [];
+        for (var i = 0; i < data.length; i++) {
+          var evento = {id: data[i].id_evento,title: data[i].nombreEvento,start:data[i].fecha_inicio};
+          eventos.push(evento);
+        }
+        console.log(eventos);
+        $('#calendar').fullCalendar({
       theme:true,
      /* dayClick: function(date, jsEvent, view) {
 
@@ -59,7 +68,7 @@ $(document).ready(function() {
       defaultDate: '2016-01-12',
       editable: true,
       eventLimit: true, // allow "more" link when too many events
-      events: [
+     /* events: [
         {
           title: 'All Day Event',
           start: '2016-01-01'
@@ -114,7 +123,21 @@ $(document).ready(function() {
           url: 'http://google.com/',
           start: '2016-01-28'
         }
-      ]
+      ]*/
+
+      resources: eventos
     });
+      }
+    })
+    .done(function() {
+      console.log("success");
+    })
+    .fail(function() {
+      console.log("error");
+    })
+    .always(function() {
+      console.log("complete");
+    });
+    
     
   });
